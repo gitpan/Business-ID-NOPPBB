@@ -12,14 +12,16 @@ our @EXPORT = qw(validate_nop_pbb);
 
 our %SPEC;
 
-our $VERSION = '0.01'; # VERSION
+our $VERSION = '0.02'; # VERSION
 
 $SPEC{validate_nop_pbb} = {
+    v => 1.1,
     summary => 'Validate (and parse) Indonesian property tax number (NOP PBB)',
     description => <<'_',
 
 Indonesian property tax object number, or Nomor Objek Pajak Pajak Bumi dan
-Bangunan, is a number given to a tax object (house, mostly).
+Bangunan, is a number given to a tax object (a piece of land with its
+house/building).
 
 NOP PBB is composed of 18 digits as follow:
 
@@ -32,7 +34,7 @@ number. Y is a special code (it is most likely not a check digit, since it is
 almost always has the value of 0).
 
 The function will return status 200 if syntax is valid and return the parsed
-number. Otherwise it will return 400.
+information hash. Otherwise it will return 400.
 
 Currently the length and AA code is checked against valid province code. There
 is currently no way to check whether a specific NOP PBB actually exists, because
@@ -40,13 +42,19 @@ you would need to query Dirjen Pajak's database for that.
 
 _
     args => {
-        str => ['str*' => {
+        str => {
             summary => 'The input string containing number to check',
-            arg_pos => 0,
-        }],
+            pos => 0,
+            schema => 'str*',
+        },
+    },
+    result => {
+        schema => ['hash*', {key_in=>['str*'=>{
+            in=>[qw/province locality district village
+                    block object special
+                   /]}]}],
     },
 };
-
 sub validate_nop_pbb {
     my (%args) = @_;
 
@@ -92,7 +100,7 @@ Business::ID::NOPPBB - Validate Indonesian property tax object number (NOP PBB)
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 
@@ -121,19 +129,22 @@ version 0.01
 
 This module provides one function: B<validate_nop_pbb>.
 
-This module's functions have L<Sub::Spec> specs.
+This module has L<Rinci> metadata.
 
 =head1 FUNCTIONS
 
 None exported by default but they are exportable.
 
-=head2 validate_nop_pbb(%args) -> [STATUS_CODE, ERR_MSG, RESULT]
+=head1 FUNCTIONS
 
+
+=head2 validate_nop_pbb(%args) -> [status, msg, result, meta]
 
 Validate (and parse) Indonesian property tax number (NOP PBB).
 
 Indonesian property tax object number, or Nomor Objek Pajak Pajak Bumi dan
-Bangunan, is a number given to a tax object (house, mostly).
+Bangunan, is a number given to a tax object (a piece of land with its
+house/building).
 
 NOP PBB is composed of 18 digits as follow:
 
@@ -146,17 +157,13 @@ number. Y is a special code (it is most likely not a check digit, since it is
 almost always has the value of 0).
 
 The function will return status 200 if syntax is valid and return the parsed
-number. Otherwise it will return 400.
+information hash. Otherwise it will return 400.
 
 Currently the length and AA code is checked against valid province code. There
 is currently no way to check whether a specific NOP PBB actually exists, because
 you would need to query Dirjen Pajak's database for that.
 
-Returns a 3-element arrayref. STATUS_CODE is 200 on success, or an error code
-between 3xx-5xx (just like in HTTP). ERR_MSG is a string containing error
-message, RESULT is the actual result.
-
-Arguments (C<*> denotes required arguments):
+Arguments ('*' denotes required arguments):
 
 =over 4
 
@@ -166,13 +173,17 @@ The input string containing number to check.
 
 =back
 
+Return value:
+
+Returns an enveloped result (an array). First element (status) is an integer containing HTTP status code (200 means OK, 4xx caller error, 5xx function error). Second element (msg) is a string containing error message, or 'OK' if status is 200. Third element (result) is optional, the actual result. Fourth element (meta) is called result metadata and is optional, a hash that contains extra information.
+
 =head1 AUTHOR
 
 Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Steven Haryanto.
+This software is copyright (c) 2012 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
