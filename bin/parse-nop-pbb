@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine;
+
+our $VERSION = '0.03'; # VERSION
+
+Perinci::CmdLine->new(url => '/Business/ID/NOPPBB/validate_nop_pbb')->run;
+
+# ABSTRACT: Parse NOP PBB
+# PODNAME: parse-nop-pbb
+
+
+__END__
+=pod
+
+=head1 NAME
+
+parse-nop-pbb - Parse NOP PBB
+
+=head1 VERSION
+
+version 0.03
+
+=head1 SYNOPSIS
+
+ % parse-nop-pbb 32.73.050.006.008-0123.0
+
+=head1 DESCRIPTION
+
+This is a simple command-line interface for <Business::ID::NOPPBB>.
+
+=head1 SEE ALSO
+
+=head1 AUTHOR
+
+Steven Haryanto <stevenharyanto@gmail.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Steven Haryanto.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+

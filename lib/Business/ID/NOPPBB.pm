@@ -1,6 +1,6 @@
 package Business::ID::NOPPBB;
 
-use 5.010;
+use 5.010001;
 use warnings;
 use strict;
 
@@ -12,7 +12,7 @@ our @EXPORT = qw(validate_nop_pbb);
 
 our %SPEC;
 
-our $VERSION = '0.02'; # VERSION
+our $VERSION = '0.03'; # VERSION
 
 $SPEC{validate_nop_pbb} = {
     v => 1.1,
@@ -49,9 +49,12 @@ _
         },
     },
     result => {
-        schema => ['hash*', {key_in=>['str*'=>{
+        schema => ['hash*', {each_index=>['str*'=>{
             in=>[qw/province locality district village
                     block object special
+
+                    eng_province_name
+                    ind_province_name
                    /]}]}],
     },
 };
@@ -60,21 +63,23 @@ sub validate_nop_pbb {
 
     my $str = $args{str} or return [400, "Please specify str"];
 
-    # cache provinces
-    state $prov_codes;
-    if (!$prov_codes) {
-        my $res = list_id_provinces(fields=>'bps_code', show_field_names=>0);
+    # cache provinces, key is code
+    state $provs;
+    if (!$provs) {
+        my $res = list_id_provinces(
+            fields=>['bps_code', 'ind_name', 'eng_name'],
+            with_field_names => 1);
         $res->[0] == 200 or die "Can't retrieve list of provinces: ".
             "$res->[0] - $res->[1]";
-        $prov_codes = {};
-        $prov_codes->{$_->[0]}++ for @{$res->[2]};
+        $provs = {};
+        $provs->{$_->{bps_code}} = $_ for @{$res->[2]};
     }
 
     $str =~ s/\D+//g;
     length($str) == 18 or return [400, "Length must be 18 digits"];
     my ($aa, $bb, $ccc, $ddd, $eee, $xxxx, $y) =
         $str =~ /(.{2})(.{2})(.{3})(.{3})(.{4})(.{1})/;
-    $prov_codes->{$aa} or return [400, "Unknown province code"];
+    $provs->{$aa} or return [400, "Unknown province code '$aa'"];
 
     [200, "OK", {
         province => $aa,
@@ -84,6 +89,9 @@ sub validate_nop_pbb {
         block => $eee,
         object => $xxxx,
         special => $y,
+
+        eng_province_name => $provs->{$aa}{eng_name},
+        ind_province_name => $provs->{$aa}{ind_name},
     }];
 }
 
@@ -100,7 +108,7 @@ Business::ID::NOPPBB - Validate Indonesian property tax object number (NOP PBB)
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
@@ -135,43 +143,10 @@ This module has L<Rinci> metadata.
 
 None exported by default but they are exportable.
 
-=head1 FUNCTIONS
 
+=head2 validate_nop_pbb() -> [status, msg, result, meta]
 
-=head2 validate_nop_pbb(%args) -> [status, msg, result, meta]
-
-Validate (and parse) Indonesian property tax number (NOP PBB).
-
-Indonesian property tax object number, or Nomor Objek Pajak Pajak Bumi dan
-Bangunan, is a number given to a tax object (a piece of land with its
-house/building).
-
-NOP PBB is composed of 18 digits as follow:
-
- AA.BB.CCC.DDD.EEE-XXXX.Y
-
-AA is the province code from BPS. BB is locality (city/regency a.k.a
-kota/kabupaten) code from BPS. CCC is district (kecamatan) code from BPS. DDD is
-village (desa/kelurahan) code from BPS. EEE is block code. XXXX is the object
-number. Y is a special code (it is most likely not a check digit, since it is
-almost always has the value of 0).
-
-The function will return status 200 if syntax is valid and return the parsed
-information hash. Otherwise it will return 400.
-
-Currently the length and AA code is checked against valid province code. There
-is currently no way to check whether a specific NOP PBB actually exists, because
-you would need to query Dirjen Pajak's database for that.
-
-Arguments ('*' denotes required arguments):
-
-=over 4
-
-=item * B<str>* => I<str>
-
-The input string containing number to check.
-
-=back
+No arguments.
 
 Return value:
 
@@ -183,7 +158,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Steven Haryanto.
+This software is copyright (c) 2013 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

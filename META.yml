@@ -4,10 +4,11 @@ author:
   - 'Steven Haryanto <stevenharyanto@gmail.com>'
 build_requires:
   Module::Build: 0.3601
+  Test::More: 0.98
 configure_requires:
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300006, CPAN::Meta::Converter version 2.113640'
+generated_by: 'Dist::Zilla version 4.300015, CPAN::Meta::Converter version 2.120921'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -15,9 +16,9 @@ meta-spec:
 name: Business-ID-NOPPBB
 requires:
   Locale::ID::Province: 0
-  Test::More: 0.96
-  perl: 5.010000
+  Perinci::CmdLine: 0
+  perl: 5.010001
 resources:
   homepage: http://search.cpan.org/dist/Business-ID-NOPPBB/
   repository: http://github.com/sharyanto/perl-Business-ID-NOPPBB
-version: 0.02
+version: 0.03

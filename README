@@ -3,7 +3,7 @@ NAME
     (NOP PBB)
 
 VERSION
-    version 0.02
+    version 0.03
 
 SYNOPSIS
      use Business::ID::NOPPBB qw(validate_nop_pbb);
@@ -35,37 +35,8 @@ DESCRIPTION
 FUNCTIONS
     None exported by default but they are exportable.
 
-FUNCTIONS
-  validate_nop_pbb(%args) -> [status, msg, result, meta]
-    Validate (and parse) Indonesian property tax number (NOP PBB).
-
-    Indonesian property tax object number, or Nomor Objek Pajak Pajak Bumi
-    dan Bangunan, is a number given to a tax object (a piece of land with
-    its house/building).
-
-    NOP PBB is composed of 18 digits as follow:
-
-     AA.BB.CCC.DDD.EEE-XXXX.Y
-
-    AA is the province code from BPS. BB is locality (city/regency a.k.a
-    kota/kabupaten) code from BPS. CCC is district (kecamatan) code from
-    BPS. DDD is village (desa/kelurahan) code from BPS. EEE is block code.
-    XXXX is the object number. Y is a special code (it is most likely not a
-    check digit, since it is almost always has the value of 0).
-
-    The function will return status 200 if syntax is valid and return the
-    parsed information hash. Otherwise it will return 400.
-
-    Currently the length and AA code is checked against valid province code.
-    There is currently no way to check whether a specific NOP PBB actually
-    exists, because you would need to query Dirjen Pajak's database for
-    that.
-
-    Arguments ('*' denotes required arguments):
-
-    *   str* => *str*
-
-        The input string containing number to check.
+  validate_nop_pbb() -> [status, msg, result, meta]
+    No arguments.
 
     Return value:
 
@@ -80,7 +51,7 @@ AUTHOR
     Steven Haryanto <stevenharyanto@gmail.com>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2012 by Steven Haryanto.
+    This software is copyright (c) 2013 by Steven Haryanto.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
