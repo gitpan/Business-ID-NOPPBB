@@ -6,16 +6,18 @@ use warnings;
 
 use Perinci::CmdLine;
 
-our $VERSION = '0.03'; # VERSION
+our $VERSION = '0.04'; # VERSION
 
 Perinci::CmdLine->new(url => '/Business/ID/NOPPBB/validate_nop_pbb')->run;
 
 # ABSTRACT: Parse NOP PBB
 # PODNAME: parse-nop-pbb
 
-
 __END__
+
 =pod
+
+=encoding utf-8
 
 =head1 NAME
 
@@ -23,7 +25,7 @@ parse-nop-pbb - Parse NOP PBB
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -47,4 +49,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
