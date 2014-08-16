@@ -1,16 +1,22 @@
 #!perl
 
-use 5.010;
+# Note: This script is a CLI interface to Riap function /Business/ID/NOPPBB/validate_nop_pbb
+# and generated automatically using Dist::Zilla::Plugin::Rinci::ScriptFromFunc version 0.01
+
+our $DATE = '2014-08-16'; # DATE
+our $VERSION = '0.06'; # VERSION
+
+use 5.010001;
 use strict;
 use warnings;
 
-use Perinci::CmdLine::Any;
+use Perinci::CmdLine::Any -prefer_lite=>1;
 
-our $VERSION = '0.05'; # VERSION
+Perinci::CmdLine::Any->new(
+    url => "/Business/ID/NOPPBB/validate_nop_pbb",
+)->run;
 
-Perinci::CmdLine::Any->new(url => '/Business/ID/NOPPBB/validate_nop_pbb')->run;
-
-# ABSTRACT: Parse NOP PBB
+# ABSTRACT: Validate (and parse) Indonesian property tax number (NOP PBB)
 # PODNAME: parse-nop-pbb
 
 __END__
@@ -21,21 +27,52 @@ __END__
 
 =head1 NAME
 
-parse-nop-pbb - Parse NOP PBB
+parse-nop-pbb - Validate (and parse) Indonesian property tax number (NOP PBB)
 
 =head1 VERSION
 
-This document describes version 0.05 of parse-nop-pbb (from Perl distribution Business-ID-NOPPBB), released on 2014-07-22.
+This document describes version 0.06 of parse-nop-pbb (from Perl distribution Business-ID-NOPPBB), released on 2014-08-16.
 
 =head1 SYNOPSIS
 
- % parse-nop-pbb 32.73.050.006.008-0123.0
+Usage:
+
+ % parse-nop-pbb
+
+Examples:
+
+ TODO
+
+To see all options:
+
+ % parse-nop-pbb --help
 
 =head1 DESCRIPTION
 
-This is a simple command-line interface for <Business::ID::NOPPBB>.
+Indonesian property tax object number, or Nomor Objek Pajak Pajak Bumi dan
+Bangunan, is a number given to a tax object (a piece of land with its
+house/building).
 
-=head1 SEE ALSO
+NOP PBB is composed of 18 digits as follow:
+
+ AA.BB.CCC.DDD.EEE-XXXX.Y
+
+AA is the province code from BPS. BB is locality (city/regency a.k.a
+kota/kabupaten) code from BPS. CCC is district (kecamatan) code from BPS. DDD is
+village (desa/kelurahan) code from BPS. EEE is block code. XXXX is the object
+number. Y is a special code (it is most likely not a check digit, since it is
+almost always has the value of 0).
+
+The function will return status 200 if syntax is valid and return the parsed
+information hash. Otherwise it will return 400.
+
+Currently the length and AA code is checked against valid province code. There
+is currently no way to check whether a specific NOP PBB actually exists, because
+you would need to query Dirjen Pajak's database for that.
+
+=head1 OPTIONS
+
+ TODO
 
 =head1 HOMEPAGE
 

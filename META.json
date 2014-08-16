@@ -30,7 +30,7 @@
       "runtime" : {
          "requires" : {
             "Locale::ID::Province" : "0",
-            "Perinci::CmdLine::Any" : "0",
+            "Perinci::CmdLine::Any" : "0.06",
             "Rinci" : "v1.1.0",
             "perl" : "5.010001"
          }
@@ -56,12 +56,17 @@
          "web" : "https://github.com/sharyanto/perl-Business-ID-NOPPBB"
       }
    },
-   "version" : "0.05",
+   "version" : "0.06",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018001"
       },
       "plugins" : [
+         {
+            "class" : "Dist::Zilla::Plugin::Rinci::ScriptFromFunc",
+            "name" : "Rinci::ScriptFromFunc",
+            "version" : "0.01"
+         },
          {
             "class" : "Dist::Zilla::Plugin::GatherDir",
             "name" : "@Author::SHARYANTO/@Filter/GatherDir",

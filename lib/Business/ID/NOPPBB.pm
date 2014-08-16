@@ -12,7 +12,7 @@ our @EXPORT = qw(validate_nop_pbb);
 
 our %SPEC;
 
-our $VERSION = '0.05'; # VERSION
+our $VERSION = '0.06'; # VERSION
 
 $SPEC{validate_nop_pbb} = {
     v => 1.1,
@@ -110,7 +110,7 @@ Business::ID::NOPPBB - Validate Indonesian property tax object number (NOP PBB)
 
 =head1 VERSION
 
-This document describes version 0.05 of Business::ID::NOPPBB (from Perl distribution Business-ID-NOPPBB), released on 2014-07-22.
+This document describes version 0.06 of Business::ID::NOPPBB (from Perl distribution Business-ID-NOPPBB), released on 2014-08-16.
 
 =head1 SYNOPSIS
 
